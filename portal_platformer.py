@@ -5,11 +5,8 @@ Created on Fri Mar  7 16:58:55 2014
 @author: zoherghadyali
 """
 
-import pygame
+import pygame, random, math, time
 from pygame.locals import *
-import random
-import math
-import time
 
 class Portal_Platformer_Model:
     """ Encodes the game state """
