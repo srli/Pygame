@@ -148,8 +148,9 @@ class PyGameWindowView:
     def draw(self):
         self.screen.fill(pygame.Color(0,0,0))
         pygame.draw.rect(self.screen, pygame.Color(self.model.duck.color[0], self.model.duck.color[1], self.model.duck.color[2]), pygame.Rect(self.model.duck.x, self.model.duck.y, self.model.duck.width, self.model.duck.height))
-        pygame.draw.rect(self.screen, pygame.Color(self.model.platform.color[0],self.model.platform.color[1],self.model.platform.color[2]),pygame.Rect(self.model.platform.x,self.model.platform.y,self.model.platform.width,self.model.platform.height))
-#        for wall in self.model.level1:
+        for platform in self.model.level1:        
+            pygame.draw.rect(self.screen, pygame.Color(self.model.platform.color[0],self.model.platform.color[1],self.model.platform.color[2]),pygame.Rect(self.model.platform.x,self.model.platform.y,self.model.platform.width,self.model.platform.height))
+        
 #            pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)          
         pygame.display.update()
 

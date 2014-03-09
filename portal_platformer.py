@@ -12,17 +12,22 @@ class Portal_Platformer_Model:
     """ Encodes the game state """
     def __init__(self):
         self.level1 = []
-        platform1 = Platform((255,255,255), 20, 700, 0,480)
-        platform2 = Platform((255,255,255), 20, 700, 0,0)
-        platform3 = Platform((255,255,255), 100,20, 250,380)
-        platform4 = Platform((255,255,255), 100,20, 450,380)
-        platform5 = Platform((255,255,255), 20, 220, 250,360)
+        platform1 = Platform((255,255,255), 20, 700, 0,480) #bottom edge
+        platform2 = Platform((255,255,255), 20, 700, 0,0) #top edge
+        platform3 = Platform((255,255,255), 500,20, 0, 0) #right edge
+        platform4 = Platform((255,255,255), 500,20, 680, 0) #left edge
+        platform5 = Platform((255,255,255), 100,20, 250,380)
+        platform6 = Platform((255,255,255), 100,20, 450,380)
+        platform7 = Platform((255,255,255), 20, 220, 250,360)
+
 
         self.level1.append(platform1)
         self.level1.append(platform2)
         self.level1.append(platform3)
         self.level1.append(platform4)
         self.level1.append(platform5)
+        self.level1.append(platform6)
+        self.level1.append(platform7)
         
         self.level2 = []
         platform1 = Platform((255,255, 255),20,150,0,485)
@@ -41,17 +46,17 @@ class Portal_Platformer_Model:
         self.level2.append(platform6)
         self.level2.append(platform7)
         
-        self.duck = Duck((155,230,249),20,20,16,16)
+        self.duck = Duck(16,16)
     
     def update(self):
         self.duck.update()
 
 class Duck:
     """Code for our moving duck"""
-    def __init__(self,color,height,width,x,y):
-        self.color = color
-        self.height = height
-        self.width = width
+    def __init__(self,x,y):
+        self.color = (155,230,249)
+        self.height = 20
+        self.width = 20
         self.x = x
         self.y = y
         self.vy = 0.0
@@ -60,13 +65,43 @@ class Duck:
         self.gravity = 0.1
         
     def update(self):
-        self.x += self.vx + self.friction
+        if self.vx > 0:
+            self.x += self.vx - self.friction
+        else:
+            self.x += self.vx + self.friction
         self.y += self.vy + self.gravity
+         
+         
+#    def update(self,vx,vy):
+#        # Move each axis separately. Note that this checks for collisions both times.
+#        if self.vx != 0:
+#            self.move_single_axis(vx, 0)
+#        if self.vy != 0:
+#            self.move_single_axis(0, vy)
+#    
+#    def move_single_axis(self, vx, vy):
+#        # Move the rect
+#        self.x += vx
+#        self.y += vy
+#                
+#        # If you collide with a wall, move out based on velocity
+#        for platform in self.model.level1:
+#            platformrect = pygame.Rect(platform.x,platform.y,platform.width,platform.height)
+#            if self.rect.colliderect(platformrect):
+#                if vx > 0: # Moving right; Hit the left side of the wall
+#                    self.rect.right = platformrect.left
+#                if vx < 0: # Moving left; Hit the right side of the wall
+#                    self.rect.left = platformrect.right
+#                if vy > 0: # Moving down; Hit the top side of the wall
+#                    self.rect.bottom = platformrect.top
+#                if vy < 0: # Moving up; Hit the bottom side of the wall
+#                    self.rect.top = platformrect.bottom
 
 class Platform:
     """ Encodes the state of a singular rectangular platform in the game """
     def __init__(self,color,height,width,x,y):
         self.color = color
+#        self.rect = pygame.Rect(x, y, height, width)
         self.height = height
         self.width = width
         self.x = x
@@ -123,5 +158,4 @@ if __name__ == '__main__':
         model.update()
         view.draw()
         time.sleep(.001)
-
     pygame.quit()
