@@ -11,33 +11,42 @@ from pygame.locals import *
 class Wall(object):
     def __init__(self, pos):
         walls.append(self)
-        self.rect = pygame.Rect(pos[0], pos[1], 16, 16)
+        self.rect = pygame.Rect(pos[0], pos[1], 20, 20)
 
 def hold_levels():
     """Normal function that holds our levels as lists. Any other way is too hard"""
     level = [[
-        "WWWWWWWWWWWWWWWWWWWW",
-        "W                  W",
-        "W         WWWWWW   W",
-        "W   WWWW       W   W",
-        "W   W        WWWW  W",
-        "W WWW  WWWW        W",
-        "W   W     W W      W",
-        "W   W     W   WWW WW",
-        "W   WWW WWW   W W  W",
-        "W     W   W   W W  W",
-        "WWW   W   WWWWW W  W",
-        "W W      WW        W",
-        "W W   WWWW   WWW   W",
-        "W     W    W   W   W",
-        "WWWWWWWWWWWWWWWWWWWW",
+        "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+        "W                                 W",
+        "W         WWWWWW                  W",
+        "W   WWWW       W                  W",
+        "W   W        WWWW                 W",
+        "W WWW  WWWW                       W",
+        "W   W     W W                     W",
+        "W   W     W   WWW                WW",
+        "W   WWW WWW   W W                 W",
+        "W     W   W   W W                 W",
+        "WWW   W   WWWWW W                 W",
+        "W W      WW                       W",
+        "W W   WWWW   WWW                  W",
+        "W     W    W   W                  W",
+        "W                                 W",
+        "W                                 W",
+        "W                                 W",
+        "W                                 W",
+        "W                                 W",
+        "W                                 W",
+        "W               WWWWWWWWWWWWWWWWW W",
+        "W                                 W",
+        "W                                 W",
+        "WW                                W",
+        "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
                               ]]
     print level
     return level
 
 def change_to_list(num):
-    level = hold_levels()  
-#    walls = []      
+    level = hold_levels()       
     for platform in level[num]:
         x = y = 0
         for row in level[num]:
@@ -46,8 +55,8 @@ def change_to_list(num):
                     Wall((x, y))
 #                    if col == "E":
 #                        end_rect = pygame.Rect(x, y, 16, 16)
-                x += 16
-            y += 16
+                x += 20
+            y += 20
             x = 0
     return walls
     
@@ -57,56 +66,7 @@ class Portal_Platformer_Model:
     """TO-DO: Clean up these level lists"""
     def __init__(self):
         self.level1 = change_to_list(0)
-        print type(self.level1)
-#        self.level = [[
-#        "WWWWWWWWWWWWWWWWWWWW",
-#        "W                  W",
-#        "W         WWWWWW   W",
-#        "W   WWWW       W   W",
-#        "W   W        WWWW  W",
-#        "W WWW  WWWW        W",
-#        "W   W     W W      W",
-#        "W   W     W   WWW WW",
-#        "W   WWW WWW   W W  W",
-#        "W     W   W   W W  W",
-#        "WWW   W   WWWWW W  W",
-#        "W W      WW        W",
-#        "W W   WWWW   WWW   W",
-#        "W     W    W   W   W",
-#        "WWWWWWWWWWWWWWWWWWWW",
-#                               ]]
-        
-#        self.level1 = []
-#        platform1 = Platform((255,255,255), 20, 700, 0,480)
-#        platform2 = Platform((255,255,255), 20, 700, 0,0)
-#        platform3 = Platform((255,255,255), 100,20, 250,380)
-#        platform4 = Platform((255,255,255), 100,20, 450,380)
-#        platform5 = Platform((255,255,255), 20, 220, 250,360)
-#
-#        self.level1.append(platform1)
-#        self.level1.append(platform2)
-#        self.level1.append(platform3)
-#        self.level1.append(platform4)
-#        self.level1.append(platform5)
-#        
-#        self.level2 = []
-#        platform1 = Platform((255,255, 255),20,150,0,485)
-#        platform2 = Platform((255,255, 255),75,20,150,425)
-#        platform3 = Platform((255,255, 255),20,150,100,0)
-#        platform4 = Platform((255,255, 255),20,175,170,250)
-#        platform5 = Platform((255,255, 255),75,20,150+175,195)
-#        platform6 = Platform((255,255, 255),20,175,325,0)
-#        platform7 = Platform((255,255,255), 20, 375, 325, 185)
-#
-#        self.level2.append(platform1)        
-#        self.level2.append(platform2)
-#        self.level2.append(platform3)
-#        self.level2.append(platform4)
-#        self.level2.append(platform5)
-#        self.level2.append(platform6)
-#        self.level2.append(platform7)
-        
-        self.duck = Duck((155,230,249),20,20,16,16)
+        self.duck = Duck((155,230,249),20,20,40,40)
     
     def update(self):
         self.duck.update()
@@ -148,8 +108,6 @@ class PyGameWindowView:
     def draw(self):
         self.screen.fill(pygame.Color(0,0,0))
         pygame.draw.rect(self.screen, pygame.Color(self.model.duck.color[0], self.model.duck.color[1], self.model.duck.color[2]), pygame.Rect(self.model.duck.x, self.model.duck.y, self.model.duck.width, self.model.duck.height))
-#        for platform in self.model.level1:        
-#            pygame.draw.rect(self.screen, pygame.Color(self.model.platform.color[0],self.model.platform.color[1],self.model.platform.color[2]),pygame.Rect(self.model.platform.x,self.model.platform.y,self.model.platform.width,self.model.platform.height))
         for wall in walls:
             pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)          
         pygame.display.update()
