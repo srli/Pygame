@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar  7 16:58:55 2014
-
-@author: zoherghadyali
-"""
-
 import pygame, random, math, time
 from pygame.locals import *
 from world import *
@@ -16,56 +9,81 @@ class Portal_Platformer_Model:
         self.level = 1
         self.walls = Walls(self.level)
         
-    def moveX(self, dx):
-        self.player.rect.x += dx
+    def updateDuck(self):
+        self.checkMovement()
         
-        for wall in self.walls.walls:
-            if self.player.rect.colliderect(wall):
-                if dx > 0:
-                    self.player.rect.right = wall.left                    
-                if dx < 0:
-                    self.player.rect.left = wall.right
-                    
-    def moveY(self):
-        self.player.vy += self.player.ay
-        if self.player.vy >= 5.0:
-            self.player.vy = 5.0
-        if self.player.vy <= -5.0:
-            self.player.vy = -5.0
+        if (self.player.moveLeft and self.player.ax < 0) or (self.player.moveRight and self.player.ax > 0):
+            self.player.vx += self.player.ax
+            if self.player.vx >= 2.0:
+                self.player.vx == 2.0
+            elif self.player.vx <= -2.0:
+                self.player.vx == -2.0
+            self.player.rect.x += self.player.vx
+        if (self.player.moveUp and self.player.ay < 0) or (self.player.moveDown and self.player.ay > 0):
+            self.player.vy += self.player.ay
+            if self.player.vy >= 2.0:
+                self.player.vy == 2.0
+            elif self.player.vy <= -2.0:
+                self.player.vy = -2.0
+            self.player.rect.y += self.player.vy
             
-        self.player.rect.y += self.player.vy
-        
+        self.checkCollision()
+
+    def checkCollision(self):
         for wall in self.walls.walls:
             if self.player.rect.colliderect(wall):
+                if self.player.vx > 0:
+                    self.player.rect.right = wall.left
+                    self.player.vx = 0.0
+                if self.player.vx < 0:
+                    self.player.rect.left = wall.right
+                    self.player.vx = 0.0
                 if self.player.vy > 0:
                     self.player.rect.bottom = wall.top
-                    self.player.canJump = True
+                    self.player.vy = 0.0
                 if self.player.vy < 0:
                     self.player.rect.top = wall.bottom
+                    self.player.vy = 0.0
+
+    def checkMovement(self):
+        for wall in self.walls.walls:
+            if self.player.rect.left == wall.right:
+                self.player.moveLeft = False
+            else:
+                self.player.moveLeft = True
+            if self.player.rect.right == wall.left:
+                self.player.moveRight = False
+            else:
+                self.player.moveRight = True
+            if self.player.rect.top == wall.bottom:
+                self.player.moveUp = False
+            else:
+                self.player.moveUp = True
+            if self.player.rect.bottom == wall.top:
+                self.player.moveDown = False
+            else:
+                self.player.moveDown = True
+
             
     def update(self):
-        self.moveY()
+        self.updateDuck()
+        print self.player.rect.y
+        print self.player.vy
+        print self.player.ay
 
 class Duck:
     """Code for our moving duck"""
     def __init__(self,x,y):
         self.rect = pygame.Rect(x,y,20,20)
-        self.canJump = False
+        self.color = (155,230,249)
+        self.vx = 0.0
         self.vy = 0.0
-        self.ay = 0.1
-        
-    def move(self):
-        self.vy += self.ay
-        if self.vy >= 2.0:
-            self.vy = 2.0
-        elif self.vy <= -2.0:
-            self.vy = -2.0
-            
-        if self.moveUp or self.moveDown:
-            self.rect.y += self.vy
-        if self.moveLeft or self.moveRight:
-            self.rect.x += self.vx
-        
+        self.ax = 0.0
+        self.ay = 0.15
+        self.moveUp = True
+        self.moveDown = True
+        self.moveLeft = True
+        self.moveRight = True
         
 class Walls:
     """ Encodes the state of a singular rectangular platform in the game """
@@ -111,15 +129,16 @@ class PyGameKeyboardController:
         self.model = model
     
     def handle_pygame_event(self, event):
-        keypressed = pygame.key.get_pressed()
-        if keypressed[pygame.K_LEFT]:
-            self.model.moveX(-2)
-        if keypressed[pygame.K_RIGHT]:
-            self.model.moveX(2)
-        if keypressed[pygame.K_UP] and self.model.player.canJump:
-            self.model.player.vy = -5.0
-            self.model.player.canJump = False
-                        
+        if event.type != KEYDOWN:
+            return
+        if event.key == pygame.K_LEFT:
+            self.model.player.ax = -1.0
+        if event.key == pygame.K_RIGHT:
+            self.model.player.ax = 1.0
+        if event.key == pygame.K_UP:
+            self.model.player.ay += -1.0
+        if event.key == pygame.K_DOWN:
+            self.model.player.ay += 1.0
 
 if __name__ == '__main__':
     pygame.init()
@@ -137,7 +156,8 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
-        controller.handle_pygame_event(event)
+            if event.type == KEYDOWN:
+                controller.handle_pygame_event(event)
         model.update()
         view.draw()
         time.sleep(.001)

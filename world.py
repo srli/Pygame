@@ -1,3 +1,9 @@
+"""
+Created on Fri Mar  7 16:58:55 2014
+
+@author: zoherghadyali, jaywoo, sophiali
+"""
+
 world1 = [
         "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
         "W                                 W",
