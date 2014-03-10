@@ -80,8 +80,8 @@ class Portal_Platformer_Model:
                 print "I'm still repeating"
                 xp = self.portal_blue.rectp.x
                 yp = self.portal_blue.rectp.y
-                self.player.rect.x = xp + 60
-                self.player.rect.y = yp + 60
+                self.player.rect.x = xp
+                self.player.rect.y = yp
 #                self.duck.rect.move_ip(self.duck.rect.x+xp, self.duck.rect.y+yp)
                 return
                 
@@ -92,8 +92,8 @@ class Portal_Platformer_Model:
                 print "I'm still repeating!"
                 xp = self.portal_orange.rectp.x
                 yp = self.portal_orange.rectp.y
-                self.player.rect.x = xp + 60
-                self.player.rect.y = yp + 60
+                self.player.rect.x = xp
+                self.player.rect.y = yp
 #                self.duck.rect.move_ip(xp,yp)
 #                self.duck.rect.move_ip(self.duck.rect.x-xp, self.duck.rect.y-yp)
                 return  
