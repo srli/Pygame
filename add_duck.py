@@ -9,9 +9,23 @@ import pygame, random, math, time
 from pygame.locals import *
 
 class Wall(object):
+    """Build walls out of the level map"""
     def __init__(self, pos):
         walls.append(self)
         self.rect = pygame.Rect(pos[0], pos[1], 20, 20)
+        
+class Portal(object):
+    """This is a portal"""
+    def __init__(self,wall):
+        if wall == 'null':
+            pass
+        else:
+            box = wall
+            self.rectp = box.inflate(10,10)
+    
+    def update(event_pos):
+        print "updating portal"
+        
 
 def hold_levels():
     """Normal function that holds our levels as lists. Any other way is too hard"""
@@ -46,6 +60,7 @@ def hold_levels():
     return level
 
 def change_to_list(num):
+    """Changes level map into rectangles pygame can use to build world"""
     level = hold_levels()       
     for platform in level[num]:
         x = y = 0
@@ -63,14 +78,18 @@ def change_to_list(num):
         
 class Portal_Platformer_Model:
     """ Encodes the game state """
-    """TO-DO: Clean up these level lists"""
     def __init__(self):
         self.level1 = change_to_list(0)
+#        if click:
+        self.portal1 = 'null'
         self.duck = Duck((155,230,249),20,20,40,40)
     
     def update(self):
         self.duck.update()
-
+#        
+    def portal_update(self,portalclick):
+        self.portal1 = Portal(portalclick)
+        
 class Duck:
     """Code for our moving duck"""
     def __init__(self,color,height,width,x,y):
@@ -109,7 +128,11 @@ class PyGameWindowView:
         self.screen.fill(pygame.Color(0,0,0))
         pygame.draw.rect(self.screen, pygame.Color(self.model.duck.color[0], self.model.duck.color[1], self.model.duck.color[2]), pygame.Rect(self.model.duck.x, self.model.duck.y, self.model.duck.width, self.model.duck.height))
         for wall in walls:
-            pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)          
+            pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)        
+        if self.model.portal1 != 'null':
+            pygame.draw.rect(self.screen, pygame.Color(0,255,0),self.model.portal.rectp)  
+        
+        
         pygame.display.update()
 
 
@@ -118,7 +141,7 @@ class PyGameKeyboardController:
     def __init__(self, model):
         self.model = model
     
-    def handle_pygame_event(self, event):
+    def handle_pygame_key(self, event):
         if event.type != KEYDOWN:
             return
         if event.key == pygame.K_LEFT:
@@ -129,6 +152,17 @@ class PyGameKeyboardController:
             self.model.duck.vy += -0.5
         if event.key == pygame.K_DOWN:
             self.model.duck.vy += 0.5
+            
+    def handle_pygame_mouse(self, event):
+        x, y = event.pos
+        for wall in walls:
+            if wall.rect.collidepoint(event.pos):
+                portalclick = pygame.Rect.copy(wall.rect)
+                print portalclick
+                print "there's collision"
+                self.model.portal_update(portalclick)
+                return
+
 
 
 if __name__ == '__main__':
@@ -148,7 +182,9 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 running = False
             if event.type == KEYDOWN:
-                controller.handle_pygame_event(event)
+                controller.handle_pygame_key(event)
+            if event.type == MOUSEBUTTONDOWN:
+                controller.handle_pygame_mouse(event)
         
         model.update()
         view.draw()
