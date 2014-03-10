@@ -16,7 +16,7 @@ class Portal(object):
             pass
         else:
             box = wall
-            self.rectp = box.inflate(10,10)
+            self.rectp = box.inflate(4,4)
     
     def update(event_pos):
         print "updating portal"
@@ -63,37 +63,27 @@ class Portal_Platformer_Model:
         
         if self.portal_blue != 'null' and self.portal_orange != 'null':
 
-#            if self.duck.rect.colliderect(self.portal_orange.rectp):
-#                if self.duck.vx > 0: # Moving right; Hit the left side of the wall
-#                    self.duck.rect.right = self.portal_blue.rectp.right
-#                if self.duck.vx < 0: # Moving left; Hit the right side of the wall
-#                    self.duck.rect.left = self.portal_blue.rectp.left
-#                if self.duck.vy > 0: # Moving down; Hit the top side of the wall
-#                    self.duck.rect.bottom = self.portal_blue.rectp.top
-#                if self.duck.vy < 0: # Moving up; Hit the bottom side of the wall
-#                    self.duck.rect.top = self.portal_blue.rectp.x
-                    
             if self.player.rect.colliderect(self.portal_orange.rectp):
-#                self.duck.vx = 0.0
-#                self.duck.vy = 0.0
+                self.player.vx = 0.0
+                self.player.vy = 0.0
                 print "Collision detected!"
                 print "I'm still repeating"
                 xp = self.portal_blue.rectp.x
                 yp = self.portal_blue.rectp.y
-                self.player.rect.x = xp
-                self.player.rect.y = yp
+                self.player.rect.x = xp + 25
+                self.player.rect.y = yp + 25
 #                self.duck.rect.move_ip(self.duck.rect.x+xp, self.duck.rect.y+yp)
                 return
                 
             if self.player.rect.colliderect(self.portal_blue.rectp):
-#                self.duck.vx = 0.0
-#                self.duck.vy = 0.0
+                self.player.vx = 0.0
+                self.player.vy = 0.0
                 print "Collision detected!"
                 print "I'm still repeating!"
                 xp = self.portal_orange.rectp.x
                 yp = self.portal_orange.rectp.y
-                self.player.rect.x = xp
-                self.player.rect.y = yp
+                self.player.rect.x = xp + 25
+                self.player.rect.y = yp + 25
 #                self.duck.rect.move_ip(xp,yp)
 #                self.duck.rect.move_ip(self.duck.rect.x-xp, self.duck.rect.y-yp)
                 return  
@@ -170,6 +160,9 @@ class PyGameWindowView:
        
         pygame.display.update()
 
+class Music():
+    def __init__(self):
+        self.music = pygame.mixer.music.load(StillAlive.mp3)
 
 class PyGameKeyboardController:
     """ Manipulate game state based on keyboard input """
@@ -188,17 +181,27 @@ class PyGameKeyboardController:
             
     def handle_pygame_mouse(self, event):
         x, y = event.pos
-        for wall in self.model.walls.walls:
-            if wall.collidepoint(event.pos):
-                portalclick = pygame.Rect.copy(wall)
-                print portalclick
-                print "there's collision"
-                if event.button == 1:
-                    self.model.portal_update_orange(portalclick)
-                if event.button == 3:
-                    self.model.portal_update_blue(portalclick)
-                return
+        xp = float(self.model.player.rect.x)
+        yp = float(self.model.player.rect.y)
+        distance = math.sqrt((x-xp)**2 + (y-yp)**2)
+        dx = (x-xp)/distance * 2
+        dy = (y-yp)/distance * 2
 
+        while distance >= 2:
+            xp += dx
+            yp += dy
+            distance -= 2
+            
+            for wall in self.model.walls.walls:
+                if wall.collidepoint(xp,yp):
+                    portalclick = pygame.Rect.copy(wall)
+                    if event.button == 1:
+                        self.model.portal_update_orange(portalclick)
+                    if event.button == 3:
+                        self.model.portal_update_blue(portalclick)
+                    print portalclick
+                    print "there's collision"
+                    return
 
 
 if __name__ == '__main__':
@@ -209,6 +212,12 @@ if __name__ == '__main__':
     model = Portal_Platformer_Model()
     view = PyGameWindowView(model,screen)
     controller = PyGameKeyboardController(model)
+    
+#    pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+#    sound = pygame.mixer.Sound('StillAlive.mp3').play()    
+    
+    music = pygame.mixer.music.load("StillAlive.mp3") 
+    pygame.mixer.music.play()
 
     running = True
 
