@@ -17,8 +17,8 @@ class Portal_Platformer_Model:
         self.portal_blue = 'null'
         self.walls = []
         self.cake = None
-        self.level = 4
-        self.construct_environment(4)
+        self.level = 0
+        self.construct_environment(self.level)
         
     def construct_environment(self, number):
         """ Generates rectangles for every wall and the cake and stores it in the variable "walls" """
