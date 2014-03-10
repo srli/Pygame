@@ -52,7 +52,7 @@ class Duck:
         self.rect = pygame.Rect(x,y,20,20)
         self.canJump = False
         self.vy = 0.0
-        self.ay = 0.15
+        self.ay = 0.1
         
     def move(self):
         self.vy += self.ay
