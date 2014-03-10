@@ -34,7 +34,7 @@ class Portal(object):
          
 class Portal_Platformer_Model:
     def __init__(self):
-        self.player = Duck(20,20)
+        self.player = Duck(40,40)
         self.portal_orange = 'null'
         self.portal_blue = 'null'
         self.walls = []
@@ -93,10 +93,12 @@ class Portal_Platformer_Model:
         if self.player.rect.colliderect(self.cake.rect):
             self.level += 1
             self.walls = []
-            self.player.rect.x = 20
-            self.player.rect.y = 20
+            self.player.rect.x = 40
+            self.player.rect.y = 40
             self.player.vx= 0
             self.player.vy = 0
+            self.portal_blue = 'null'
+            self.portal_orange = 'null'
             self.construct_environment(self.level)
 
         
