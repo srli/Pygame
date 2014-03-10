@@ -9,6 +9,16 @@ import pygame, random, math, time
 from pygame.locals import *
 from world import *
 
+
+class Wall:
+    """ Encodes the state of a singular rectangular platform in the game """
+    def __init__(self, pos):
+        self.rect = pygame.Rect(pos[0], pos[1], 20, 20)
+    
+class Cake(object):
+     def __init__(self, pos):
+         self.rect = pygame.Rect(pos[0], pos[1], 20, 20)
+
 class Portal(object):
     """This is a portal"""
     def __init__(self,wall):
@@ -20,25 +30,44 @@ class Portal(object):
     
     def update(event_pos):
         print "updating portal"
-        
-        
+
+         
 class Portal_Platformer_Model:
     def __init__(self):
-        self.player = Duck(20,20)
+        self.player = Duck(40,40)
         self.portal_orange = 'null'
         self.portal_blue = 'null'
-        self.level = 1
-        self.walls = Walls(self.level)
+        self.walls = []
+        self.cake = None
+        self.level = 0
+        self.construct_environment(0)
+        
+    def construct_environment(self, number):
+        self.walls = []
+        self.cake = None
+        level = world
+        for platform in level:
+            x = y = 0
+            for row in level[number]:
+                for col in row:
+                    if col == "W":
+                        self.walls.append(Wall((x, y)))
+                    if col == "C":
+                        self.cake = Cake((x,y))
+                        print "I see cake!"
+                    x += 20
+                y += 20
+                x = 0
         
     def moveX(self, dx):
         self.player.rect.x += dx
         
-        for wall in self.walls.walls:
+        for wall in self.walls:
             if self.player.rect.colliderect(wall):
                 if dx > 0:
-                    self.player.rect.right = wall.left                    
+                    self.player.rect.right = wall.rect.left                    
                 if dx < 0:
-                    self.player.rect.left = wall.right
+                    self.player.rect.left = wall.rect.right
                     
     def moveY(self):
         self.player.vy += self.player.ay
@@ -49,17 +78,29 @@ class Portal_Platformer_Model:
             
         self.player.rect.y += self.player.vy
         
-        for wall in self.walls.walls:
+        for wall in self.walls:
             if self.player.rect.colliderect(wall):
                 if self.player.vy > 0:
-                    self.player.rect.bottom = wall.top
+                    self.player.rect.bottom = wall.rect.top
                     self.player.canJump = True
                 if self.player.vy < 0:
-                    self.player.rect.top = wall.bottom
+                    self.player.rect.top = wall.rect.bottom
             
    
     def update(self):
         self.moveY()
+        
+        if self.player.rect.colliderect(self.cake.rect):
+            self.level += 1
+            self.walls = []
+            self.player.rect.x = 40
+            self.player.rect.y = 40
+            self.player.vx= 0
+            self.player.vy = 0
+            self.portal_blue = 'null'
+            self.portal_orange = 'null'
+            self.construct_environment(self.level)
+
         
         if self.portal_blue != 'null' and self.portal_orange != 'null':
 
@@ -89,7 +130,7 @@ class Portal_Platformer_Model:
                 return  
             else:
                 pass
-                    
+            
     def portal_update_orange(self,portalclick):
         self.portal_orange = Portal(portalclick)
         
@@ -116,31 +157,8 @@ class Duck:
         if self.moveLeft or self.moveRight:
             self.rect.x += self.vx
 
-class Walls:
-    """ Encodes the state of a singular rectangular platform in the game """
-    def __init__(self, level):
-        self.level = level
-        self.world = []
-        
-        if self.level == 1:
-            self.world = world1
-        elif self.level == 2:
-            self.world = world2
-        elif self.level == 3:
-            self.world = world3           
-            
-        self.walls = self.generateWalls()
-        
-    def generateWalls(self):
-        listofwalls= []        
 
-        for i in range(len(self.world)):
-            for j in range(len(self.world[0])):
-                if self.world[i][j] == "W":
-                    listofwalls.append(pygame.Rect(j*20, i*20, 20, 20))
         
-        return listofwalls                 
-
 class PyGameWindowView:
     """ Draws our game in a Pygame window """
     def __init__(self,model,screen):
@@ -150,9 +168,10 @@ class PyGameWindowView:
     def draw(self):
         self.screen.fill(pygame.Color(0,0,0))
         pygame.draw.rect(self.screen, pygame.Color(0, 0, 255), self.model.player.rect)
-        for wall in self.model.walls.walls:
-            pygame.draw.rect(self.screen, pygame.Color(255, 255, 255), wall)
-      
+        for wall in self.model.walls:
+            pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)
+        pygame.draw.rect(screen, pygame.Color(255,105,201), self.model.cake.rect)
+   
         if self.model.portal_orange != 'null':
             pygame.draw.rect(self.screen, pygame.Color(255,153,0),self.model.portal_orange.rectp)
         if self.model.portal_blue != 'null':
@@ -181,11 +200,24 @@ class PyGameKeyboardController:
             
     def handle_pygame_mouse(self, event):
         x, y = event.pos
+<<<<<<< HEAD:add_duck.py
         xp = float(self.model.player.rect.x)
         yp = float(self.model.player.rect.y)
         distance = math.sqrt((x-xp)**2 + (y-yp)**2)
         dx = (x-xp)/distance * 2
         dy = (y-yp)/distance * 2
+=======
+        for wall in self.model.walls:
+            if wall.rect.collidepoint(event.pos):
+                portalclick = pygame.Rect.copy(wall.rect)
+                print portalclick
+                print "there's collision"
+                if event.button == 1:
+                    self.model.portal_update_orange(portalclick)
+                if event.button == 3:
+                    self.model.portal_update_blue(portalclick)
+                return
+>>>>>>> 206c6e202a626deb280dac867348f03aabeda6d7:add_duck2.py
 
         while distance >= 2:
             xp += dx
