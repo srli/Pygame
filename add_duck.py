@@ -32,7 +32,7 @@ def hold_levels():
     level = [[
         "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
         "W                                 W",
-        "W         WWWWWW                  W",
+        "W      W  WWWWWW                  W",
         "W   WWWW       W                  W",
         "W   W        WWWW                 W",
         "W WWW  WWWW                       W",
@@ -83,7 +83,7 @@ class Portal_Platformer_Model:
 #        if click:
         self.portal_orange = 'null'
         self.portal_blue = 'null'
-        self.duck = Duck((155,230,249),20,20,40,40)
+        self.duck = Duck((155,230,249),rect)
     
     def update(self):
         self.duck.update()
@@ -97,7 +97,8 @@ class Portal_Platformer_Model:
         
 class Duck:
     """Code for our moving duck"""
-    def __init__(self,color,height,width,x,y):
+    def __init__(self,color,rect):
+        self.rect = pygame.Rect(40, 40, 20, 20)
         self.color = color
         self.height = height
         self.width = width
@@ -135,10 +136,9 @@ class PyGameWindowView:
         for wall in walls:
             pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)        
         if self.model.portal_orange != 'null':
-            pygame.draw.rect(self.screen, pygame.Color(0,255,0),self.model.portal_orange.rectp)
+            pygame.draw.rect(self.screen, pygame.Color(255,153,0),self.model.portal_orange.rectp)
         if self.model.portal_blue != 'null':
-            pygame.draw.rect(self.screen, pygame.Color(0,0,255),self.model.portal_blue.rectp)  
-        
+            pygame.draw.rect(self.screen, pygame.Color(102,204,255),self.model.portal_blue.rectp)    
         
         pygame.display.update()
 
