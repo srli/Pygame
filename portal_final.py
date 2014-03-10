@@ -17,8 +17,8 @@ class Portal_Platformer_Model:
         self.portal_blue = 'null'
         self.walls = []
         self.cake = None
-        self.level = 0
-        self.construct_environment(0)
+        self.level = 4
+        self.construct_environment(4)
         
     def construct_environment(self, number):
         """ Generates rectangles for every wall and the cake and stores it in the variable "walls" """
@@ -73,8 +73,6 @@ class Portal_Platformer_Model:
         
         if self.player.rect.colliderect(self.cake.rect): #Checks if the player gets to the cake and takes the player to the next level
             self.level += 1
-            if self.level > 4:
-                image("cake.png",True)
             self.walls = []
             self.player.rect.x = 40
             self.player.rect.y = 40
@@ -82,7 +80,10 @@ class Portal_Platformer_Model:
             self.player.vy = 0
             self.portal_blue = 'null'
             self.portal_orange = 'null'
-            self.construct_environment(self.level)
+            if self.level > 4:
+                image("cake.png",True) #Display end message
+            else:
+                self.construct_environment(self.level) #Construct the next level
 
         
         if self.portal_blue != 'null' and self.portal_orange != 'null':
@@ -260,6 +261,8 @@ if __name__ == '__main__':
                 controller.handle_pygame_mouse(event)
         controller.handle_pygame_key()
         model.update()
+        if model.level > 4: #Checks that the level is anything from 0 to 4 (there are only 5 levels)
+            break
         view.draw()
         time.sleep(0.001)
     
