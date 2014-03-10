@@ -4,7 +4,7 @@ Created on Fri Mar  7 16:58:55 2014
 @author: zoherghadyali, jaywoo, sophiali
 """
 
-world1 = [
+world = [[
         "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
         "W              W                  W",
         "W              W                  W",
@@ -24,15 +24,14 @@ world1 = [
         "W                                 W",
         "W                                 W",
         "W                                 W",
-        "W                                 W",
+        "W                   C             W",
         "W               WWWWWWWWWWWW      W",
         "W               W                 W",
         "W               W                 W",
-        "WW              W  C              W",
+        "WW              W                 W",
         "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
-        ]
-
-world2 = [
+        ],
+        [
         "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
         "W                                 W",
         "W         WWWWWW                  W",
@@ -52,9 +51,10 @@ world2 = [
         "W                                 W",
         "W                                 W",
         "W                                 W",
-        "W                                 W",
+        "W                         C       W",
         "W               WWWWWWWWWWWWWWWWW W",
         "W                                 W",
         "W                                 W",
         "WW                                W",
-        "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",]
+        "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+        ]]
