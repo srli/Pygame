@@ -81,14 +81,19 @@ class Portal_Platformer_Model:
     def __init__(self):
         self.level1 = change_to_list(0)
 #        if click:
-        self.portal1 = 'null'
+        self.portal_orange = 'null'
+        self.portal_blue = 'null'
         self.duck = Duck((155,230,249),20,20,40,40)
     
     def update(self):
         self.duck.update()
 #        
-    def portal_update(self,portalclick):
-        self.portal1 = Portal(portalclick)
+    def portal_update_orange(self,portalclick):
+        self.portal_orange = Portal(portalclick)
+        
+    def portal_update_blue(self,portalclick):
+        self.portal_blue = Portal(portalclick)
+        
         
 class Duck:
     """Code for our moving duck"""
@@ -129,8 +134,10 @@ class PyGameWindowView:
         pygame.draw.rect(self.screen, pygame.Color(self.model.duck.color[0], self.model.duck.color[1], self.model.duck.color[2]), pygame.Rect(self.model.duck.x, self.model.duck.y, self.model.duck.width, self.model.duck.height))
         for wall in walls:
             pygame.draw.rect(screen, pygame.Color(255, 255, 255), wall.rect)        
-        if self.model.portal1 != 'null':
-            pygame.draw.rect(self.screen, pygame.Color(0,255,0),self.model.portal.rectp)  
+        if self.model.portal_orange != 'null':
+            pygame.draw.rect(self.screen, pygame.Color(0,255,0),self.model.portal_orange.rectp)
+        if self.model.portal_blue != 'null':
+            pygame.draw.rect(self.screen, pygame.Color(0,0,255),self.model.portal_blue.rectp)  
         
         
         pygame.display.update()
@@ -160,7 +167,10 @@ class PyGameKeyboardController:
                 portalclick = pygame.Rect.copy(wall.rect)
                 print portalclick
                 print "there's collision"
-                self.model.portal_update(portalclick)
+                if event.button == 1:
+                    self.model.portal_update_orange(portalclick)
+                if event.button == 3:
+                    self.model.portal_update_blue(portalclick)
                 return
 
 
